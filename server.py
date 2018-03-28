@@ -3,6 +3,8 @@ import os
 from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
+from flask_autodoc import autodoc
+
 from firebase import firebase
 
 import cognitive_face as cf
@@ -11,6 +13,7 @@ import cognitive_face as cf
 app = Flask(__name__)
 auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
+auto = autodoc.Autodoc(app)
 
 
 # Firebase Helper (http://ozgur.github.io/python-firebase/)
@@ -36,7 +39,8 @@ mail = Mail(app)
 
 
 # API ENDPOINTS
-@app.route('/api/v1/new-user-submit', methods=['PUT'])
+@app.route('/api/v1/new-user-submit/<string:email><string:uid>', methods=['PUT'])
+@auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
     user_email = request.form.get('email')
     user_uid = request.form.get('uid')
@@ -46,7 +50,8 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
     return send_email_confirmation(user_email, user_uid)
 
 
-@app.route('/api/v1/new-kyc-submit', methods=['POST'])
+@app.route('/api/v1/new-kyc-submit/<string:uid><string:selfie_url><string:passport_url>', methods=['POST'])
+@auto.doc()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
     user_email = db.get('/users/'+user_uid, 'email_address')
@@ -66,7 +71,8 @@ def new_kyc_submit():
 
 
 # PAGE ROUTING
-@app.route('/new-user-confirm')
+@app.route('/new-user-confirm/<string:uid>')
+@auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
     exists = db.get('/users/'+user_uid)
@@ -80,7 +86,13 @@ def new_user_confirm():
     return 'Email confirmation successful! Redirecting to MyFace to login...'
 
 
+@app.route('/documentation')
+def documentation():
+    return auto.html()
+
+
 @app.route('/')
+@auto.doc()
 def hello_world():
     # return 'Welcome to the MyFace Verification Server!'
     # print(send_email('charlescrinkle@gmail.com', '123'))
