@@ -20,7 +20,7 @@ db = firebase.FirebaseApplication('https://kyc-app-db.firebaseio.com/', None)
 # Azure Face API Details
 KEY = 'be8a2049b2e24dc3a42b041739af2ed0'
 cf.Key.set(KEY)
-BASE_URL = 'https://westus.api.cognitive.microsoft.com/face/v1.0/'  # Replace with your regional Base URL
+BASE_URL = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0'  # Replace with your regional Base URL
 cf.BaseUrl.set(BASE_URL)
 example_url = 'https://raw.githubusercontent.com/Microsoft/Cognitive-Face-Windows/master/Data/detection1.jpg'
 
@@ -37,9 +37,9 @@ mail = Mail(app)
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit', methods=['PUT'])
-def new_user_submission():  # acknowledges new user and sends confirmation email
-    user_email = request.args.get('email')
-    user_uid = request.args.get('uid')
+def new_user_submit():  # acknowledges new user and sends confirmation email
+    user_email = request.form.get('email')
+    user_uid = request.form.get('uid')
 
     db.put('/users/'+user_uid, 'email_confirmed', False)
 
@@ -48,21 +48,21 @@ def new_user_submission():  # acknowledges new user and sends confirmation email
 
 @app.route('/api/v1/new-kyc-submit', methods=['POST'])
 def new_kyc_submit():
-    user_uid = request.args.get('uid')
-    user_email = db.get('/users/'+user_uid+'/email_address/', None)
-    selfie_url = request.args.get('selfie_url')
-    passport_url = request.args.get('passport_url')
+    user_uid = request.form.get('uid')
+    user_email = db.get('/users/'+user_uid, 'email_address')
+    selfie_url = request.form.get('selfie_url')
+    passport_url = request.form.get('passport_url')
 
     result = verify_faces(selfie_url, passport_url)
 
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
-        send_email_verify_success(user_email, result[1])
-        return 'Success'
+        send_email_verify_success(user_email)
+        return 'KYC APPROVED'
     else:
         db.put('/users/'+user_uid, 'kyc_status', 'REJECTED')
         send_email_verify_fail(user_email, result[1])
-        return 'Fail'
+        return 'KYC REJECTED'
 
 
 # PAGE ROUTING
@@ -84,7 +84,7 @@ def new_user_confirm():
 def hello_world():
     # return 'Welcome to the MyFace Verification Server!'
     # print(send_email('charlescrinkle@gmail.com', '123'))
-    return 'Welcome to the MyFace Verification Server!', request.base_url
+    return 'Welcome to the MyFace Verification Server!'
 
 
 # UTILITY FUNCTIONS
