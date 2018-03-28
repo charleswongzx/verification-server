@@ -1,0 +1,5 @@
+requests==2.9.1
+cognitive_face==1.4.1
+Flask==0.12.2
+flask_httpauth==3.2.3
+flask_mail==0.9.1
