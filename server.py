@@ -1,7 +1,8 @@
+import os
+
 from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
-import requests
 from firebase import firebase
 
 import cognitive_face as cf
@@ -164,5 +165,6 @@ def verify_faces(selfie_url, passport_url):  # Face API Handling
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
