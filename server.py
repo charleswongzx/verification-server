@@ -40,7 +40,7 @@ mail = Mail(app)
 
 
 # API ENDPOINTS
-@app.route('/api/v1/new-user-submit/<string:email><string:uid>', methods=['PUT'])
+@app.route('/api/v1/new-user-submit/<string:email><string:uid>', methods=['PUT','GET'])
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
     user_email = request.form.get('email')
