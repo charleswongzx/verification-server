@@ -79,7 +79,7 @@ def new_user_confirm():
     if not user_uid:
         return 'No uid in header!'
     else:
-        exists = db.get('/users/'+user_uid)
+        exists = db.get('/users/', user_uid)
 
     if exists:
         db.put('/users/'+user_uid, 'email_confirmed', True)
