@@ -76,7 +76,10 @@ def new_kyc_submit():
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
-    exists = db.get('/users/'+user_uid)
+    if not user_uid:
+        return 'No uid in header!'
+    else:
+        exists = db.get('/users/'+user_uid)
 
     if exists:
         db.put('/users/'+user_uid, 'email_confirmed', True)
