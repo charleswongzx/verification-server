@@ -4,6 +4,7 @@ from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
 from flask_autodoc import autodoc
+import gunicorn
 
 from firebase import firebase
 
@@ -29,7 +30,7 @@ example_url = 'https://raw.githubusercontent.com/Microsoft/Cognitive-Face-Window
 
 
 # Email Config
-app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'sutd.myfaceapp@gmail.com'
 app.config['MAIL_PASSWORD'] = 'myface2018!'
