@@ -40,7 +40,7 @@ mail = Mail(app)
 
 
 # API ENDPOINTS
-@app.route('/api/v1/new-user-submit/', methods=['PUT','GET'])
+@app.route('/api/v1/new-user-submit/', methods=['PUT'])
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
     user_email = request.form.get('email')
@@ -48,9 +48,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 
     db.put('/users/'+user_uid, 'email_confirmed', False)
 
-    return
-
-    # return send_email_confirmation(user_email, user_uid)
+    return send_email_confirmation(user_email, user_uid)
 
 
 @app.route('/api/v1/new-kyc-submit/', methods=['POST'])
