@@ -60,6 +60,16 @@ Invalid email in user registration|/api/v1/new-user-submit/|testNewUserSubmitInv
 Repo can be deployed as-is to heroku.
 Current demo instance running at https://myface-server.herokuapp.com/.
 
+## Features
+* Handling of new user registration and KYC submission
+* Automatic email for user confirmation and notification
+* Face verification using Microsoft's cognitive API
+* User email confirmation and KYC verification status auto reflected in DB
+
+## To-do
+* Require user verification on endpoints
+* Re-direction back to app upon successful confirm
+
 ## Authors
 
 * **Charles Wong** - [Profile](https://github.com/charleswongzx)
