@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
 from flask_autodoc import autodoc
@@ -53,7 +53,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 
     db.put('/users/'+user_uid, 'email_confirmed', False)
 
-    return send_email_confirmation(user_email, user_uid)
+    return jsonify(send_email_confirmation(user_email, user_uid))
 
 
 @app.route('/api/v1/new-kyc-submit/', methods=['POST'])
@@ -70,11 +70,11 @@ def new_kyc_submit():
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
         send_email_verify_success(user_email)
-        return 'KYC APPROVED'
+        return jsonify('KYC APPROVED')
     else:
         db.put('/users/'+user_uid, 'kyc_status', 'REJECTED')
         send_email_verify_fail(user_email, result[1])
-        return 'KYC REJECTED'
+        return jsonify('KYC REJECTED')
 
 
 # PAGE ROUTING
@@ -83,18 +83,20 @@ def new_kyc_submit():
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
+    response = ''
     if not user_uid:
-        return 'No uid in header!'
+        response = 'No uid in header!'
     else:
         exists = db.get('/users/', user_uid)
 
     if exists:
         db.put('/users/'+user_uid, 'email_confirmed', True)
     else:
-        return 'No such user exists!'
+        response = 'No such user exists!'
 
     # TODO: implement redirection to ionic app
-    return 'Email confirmation successful! Redirecting to MyFace to login...'
+    response = 'Email confirmation successful! Redirecting to MyFace to login...'
+    return response
 
 
 @app.route('/documentation')
@@ -189,6 +191,6 @@ def verify_faces(selfie_url, passport_url):  # Face API Handling
 
 
 if __name__ == '__main__':
-    #port = int(os.environ.get('PORT', 5000))
-    #app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host='0.0.0.0', port=port)
     app.run(debug=True, use_reloader=True)
