@@ -44,8 +44,8 @@ Homepage is accessible|/|testHomePage
 User email confirmation successful|/new-user-confirm/|testNewUserConfirmSuccess
 No uid in email confirmation request|/new-user-confirm/|testNewUserConfirmNoUid
 No such user in database|/new-user-confirm/|testNewUserConfirmNoSuchUser
-Kyc verification success|/api/v1/new-kyc-submit/|testNewKycSubmitSuccess
-Kyc verification fail due to mismatched images|/api/v1/new-kyc-submit/|testNewKycSubmitMismatch
+KYC verification success|/api/v1/new-kyc-submit/|testNewKycSubmitSuccess
+KYC verification fail due to mismatched images|/api/v1/new-kyc-submit/|testNewKycSubmitMismatch
 No uid in request|/api/v1/new-kyc-submit/|testNewKycSubmitNoUid
 No such user in database|/api/v1/new-kyc-submit/|testNewKycSubmitNoSuchUser
 No selfie in request|/api/v1/new-kyc-submit/|testNewKycSubmitNoSelfie
