@@ -5,3 +5,4 @@ flask_httpauth==3.2.3
 flask_mail==0.9.1
 python_firebase==1.2
 gunicorn==19.7.1
+flask_cors==3.0.3
