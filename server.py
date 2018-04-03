@@ -56,9 +56,8 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
     return jsonify(send_email_confirmation(user_email, user_uid))
 
 
-@app.route('/api/v1/new-kyc-submit/', methods=['POST'])
+@app.route('/api/v1/new-kyc-submit/', methods=['GET, POST'])
 @cross_origin()
-@auto.doc()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
     user_email = db.get('/users/'+user_uid, 'email_address')
