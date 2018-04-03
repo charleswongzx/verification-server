@@ -6,12 +6,8 @@ Intermediary between client app and database for image verification.
 This project is built to be deployed on Heroku, but can be run locally as well.
 ### Prerequisites
 
-```
-Python 3.6
-
-pip
-
-```
+* python 3.6
+* pip
 
 ### Installing
 
@@ -31,47 +27,44 @@ Use Postman or similar API-testing app for fast debug.
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
+Tests are run using the built-in unittest python module.
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
+To run all tests, run the following:
 ```
-Give an example
+python -m unittest
 ```
 
-### And coding style tests
+### API Tests
 
-Explain what these tests test and why
+Server endpoints were tested for maximum code coverage.
 
-```
-Give an example
-```
+**Test Case**|**Endpoint**|**Function**
+:-----:|:-----:|:-----:
+Homepage is accessible|/|testHomePage
+User email confirmation successful|/new-user-confirm/|testNewUserConfirmSuccess
+No uid in email confirmation request|/new-user-confirm/|testNewUserConfirmNoUid
+No such user in database|/new-user-confirm/|testNewUserConfirmNoSuchUser
+Kyc verification success|/api/v1/new-kyc-submit/|testNewKycSubmitSuccess
+Kyc verification fail due to mismatched images|/api/v1/new-kyc-submit/|testNewKycSubmitMismatch
+No uid in request|/api/v1/new-kyc-submit/|testNewKycSubmitNoUid
+No such user in database|/api/v1/new-kyc-submit/|testNewKycSubmitNoSuchUser
+No selfie in request|/api/v1/new-kyc-submit/|testNewKycSubmitNoSelfie
+No passport in request|/api/v1/new-kyc-submit/|testNewKycSubmitNoPassport
+New user registration success|/api/v1/new-user-submit/|testNewUserSubmitSuccess
+No uid in user registration request|/api/v1/new-user-submit/|testNewUserSubmitNoUid
+No email in user registration request|/api/v1/new-user-submit/|testNewUserSubmitNoEmail
+Invalid email in user registration|/api/v1/new-user-submit/|testNewUserSubmitInvalidEmail
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
+Repo can be deployed as-is to heroku.
+Current demo instance running at https://myface-server.herokuapp.com/.
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Charles Wong** - [Profile](https://github.com/charleswongzx)
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/orgs/myFace-KYC/people) who participated in this project.
 
 ## License
 
@@ -79,6 +72,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* http://flask.pocoo.org/docs/0.12/testing/
+* https://pypi.python.org/pypi/python-firebase/1.2
+* https://azure.microsoft.com/en-us/services/cognitive-services/face/
