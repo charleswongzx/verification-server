@@ -4,6 +4,8 @@ from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
 from flask_autodoc import autodoc
+from flask_cors import CORS, cross_origin
+
 import gunicorn
 
 from firebase import firebase
@@ -12,6 +14,8 @@ import cognitive_face as cf
 
 # Server Gubbins
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
 auto = autodoc.Autodoc(app)
@@ -41,6 +45,7 @@ mail = Mail(app)
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit/', methods=['PUT'])
+@cross_origin()
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
     user_email = request.form.get('email')
@@ -52,6 +57,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 
 
 @app.route('/api/v1/new-kyc-submit/', methods=['POST'])
+@cross_origin()
 @auto.doc()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
@@ -73,6 +79,7 @@ def new_kyc_submit():
 
 # PAGE ROUTING
 @app.route('/new-user-confirm/')
+@cross_origin()
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
@@ -96,6 +103,7 @@ def documentation():
 
 
 @app.route('/')
+@cross_origin()
 @auto.doc()
 def hello_world():
     # return 'Welcome to the MyFace Verification Server!'
