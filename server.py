@@ -14,8 +14,8 @@ import cognitive_face as cf
 
 # Server Gubbins
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+# cors = CORS(app)
+# app.config['CORS_HEADERS'] = 'Content-Type'
 auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
 auto = autodoc.Autodoc(app)
@@ -45,7 +45,7 @@ mail = Mail(app)
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit/', methods=['PUT'])
-@cross_origin()
+# @cross_origin()
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
     user_email = request.form.get('email')
@@ -56,8 +56,8 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
     return jsonify(send_email_confirmation(user_email, user_uid))
 
 
-@app.route('/api/v1/new-kyc-submit/', methods=['GET, POST'])
-@cross_origin()
+@app.route('/api/v1/new-kyc-submit/', methods=['POST'])
+# @cross_origin()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
     user_email = db.get('/users/'+user_uid, 'email_address')
@@ -78,7 +78,7 @@ def new_kyc_submit():
 
 # PAGE ROUTING
 @app.route('/new-user-confirm/')
-@cross_origin()
+# @cross_origin()
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
