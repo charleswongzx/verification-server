@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_httpauth import HTTPBasicAuth
 from flask_mail import Mail, Message
 from flask_autodoc import autodoc
@@ -14,8 +14,8 @@ import cognitive_face as cf
 
 # Server Gubbins
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+# cors = CORS(app)
+# app.config['CORS_HEADERS'] = 'Content-Type'
 auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
 auto = autodoc.Autodoc(app)
@@ -45,46 +45,64 @@ mail = Mail(app)
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit/', methods=['PUT'])
-@cross_origin()
+# @cross_origin()
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
-    user_email = request.form.get('email')
-    user_uid = request.form.get('uid')
 
+    user_uid = request.form.get('uid')
+    if not user_uid:
+        return 'No uid in args!'
+
+    user_email = request.form.get('email')
+    if not user_email:
+        return 'No email in args!'
+
+    db.put('/users/'+user_uid, 'email_address', user_email)
     db.put('/users/'+user_uid, 'email_confirmed', False)
 
-    return send_email_confirmation(user_email, user_uid)
+    return jsonify(send_email_confirmation(user_email, user_uid))
 
 
-@app.route('/api/v1/new-kyc-submit/', methods=['POST'])
-@cross_origin()
+@app.route('/api/v1/new-kyc-submit/', methods=['PUT'])
 @auto.doc()
+# @cross_origin()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
+    if not user_uid:
+        return 'No uid in args!'
+
     user_email = db.get('/users/'+user_uid, 'email_address')
+    if not user_email:
+        return 'No such user!'
+
     selfie_url = request.form.get('selfie_url')
+    if not selfie_url:
+        return 'No selfie_url in args!'
+
     passport_url = request.form.get('passport_url')
+    if not passport_url:
+        return 'No passport_url in args!'
 
     result = verify_faces(selfie_url, passport_url)
 
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
         send_email_verify_success(user_email)
-        return 'KYC APPROVED'
+        return jsonify('KYC APPROVED')
     else:
         db.put('/users/'+user_uid, 'kyc_status', 'REJECTED')
         send_email_verify_fail(user_email, result[1])
-        return 'KYC REJECTED'
+        return jsonify('KYC REJECTED')
 
 
 # PAGE ROUTING
 @app.route('/new-user-confirm/')
-@cross_origin()
+# @cross_origin()
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
     if not user_uid:
-        return 'No uid in header!'
+        return 'No uid in args!'
     else:
         exists = db.get('/users/', user_uid)
 
@@ -94,7 +112,8 @@ def new_user_confirm():
         return 'No such user exists!'
 
     # TODO: implement redirection to ionic app
-    return 'Email confirmation successful! Redirecting to MyFace to login...'
+    response = 'Email confirmation successful! Redirecting to MyFace to login...'
+    return response
 
 
 @app.route('/documentation')
@@ -189,6 +208,6 @@ def verify_faces(selfie_url, passport_url):  # Face API Handling
 
 
 if __name__ == '__main__':
-    #port = int(os.environ.get('PORT', 5000))
-    #app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get('PORT', 5000))
+    # app.run(host='0.0.0.0', port=port)
     app.run(debug=True, use_reloader=True)
