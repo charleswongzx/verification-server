@@ -48,8 +48,14 @@ mail = Mail(app)
 # @cross_origin()
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
-    user_email = request.form.get('email')
+
     user_uid = request.form.get('uid')
+    if not user_uid:
+        return 'No uid in args!'
+
+    user_email = request.form.get('email')
+    if not user_email:
+        return 'No email in args!'
 
     db.put('/users/'+user_uid, 'email_address', user_email)
     db.put('/users/'+user_uid, 'email_confirmed', False)
@@ -61,15 +67,23 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 @auto.doc()
 # @cross_origin()
 def new_kyc_submit():
-    print('USER UID:')
     user_uid = request.form.get('uid')
-    print(user_uid)
+    if not user_uid:
+        return 'No uid in args!'
+
     user_email = db.get('/users/'+user_uid, 'email_address')
+    if not user_email:
+        return 'No such user!'
+
     selfie_url = request.form.get('selfie_url')
+    if not selfie_url:
+        return 'No selfie_url in args!'
+
     passport_url = request.form.get('passport_url')
+    if not passport_url:
+        return 'No passport_url in args!'
 
     result = verify_faces(selfie_url, passport_url)
-
 
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
@@ -88,7 +102,7 @@ def new_kyc_submit():
 def new_user_confirm():
     user_uid = request.args.get('uid')
     if not user_uid:
-        return 'No uid in header!'
+        return 'No uid in args!'
     else:
         exists = db.get('/users/', user_uid)
 
