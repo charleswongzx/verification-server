@@ -65,6 +65,7 @@ def new_kyc_submit():
     passport_url = request.form.get('passport_url')
 
     result = verify_faces(selfie_url, passport_url)
+    print('test')
 
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
@@ -84,14 +85,14 @@ def new_user_confirm():
     user_uid = request.args.get('uid')
     response = ''
     if not user_uid:
-        response = 'No uid in header!'
+        return 'No uid in header!'
     else:
         exists = db.get('/users/', user_uid)
 
     if exists:
         db.put('/users/'+user_uid, 'email_confirmed', True)
     else:
-        response = 'No such user exists!'
+        return 'No such user exists!'
 
     # TODO: implement redirection to ionic app
     response = 'Email confirmation successful! Redirecting to MyFace to login...'
