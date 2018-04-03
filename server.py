@@ -59,13 +59,15 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 @app.route('/api/v1/new-kyc-submit/', methods=['POST'])
 # @cross_origin()
 def new_kyc_submit():
+    print('USER UID:')
     user_uid = request.form.get('uid')
+    print(user_uid)
     user_email = db.get('/users/'+user_uid, 'email_address')
     selfie_url = request.form.get('selfie_url')
     passport_url = request.form.get('passport_url')
 
     result = verify_faces(selfie_url, passport_url)
-    print('test')
+
 
     if result[0]:
         db.put('/users/'+user_uid, 'kyc_status', 'APPROVED')
@@ -83,7 +85,6 @@ def new_kyc_submit():
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
-    response = ''
     if not user_uid:
         return 'No uid in header!'
     else:
