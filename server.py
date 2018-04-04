@@ -14,8 +14,8 @@ import cognitive_face as cf
 
 # Server Gubbins
 app = Flask(__name__)
-# cors = CORS(app)
-# app.config['CORS_HEADERS'] = 'Content-Type'
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
 auto = autodoc.Autodoc(app)
@@ -45,7 +45,7 @@ mail = Mail(app)
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit/', methods=['PUT'])
-# @cross_origin()
+@cross_origin()
 @auto.doc()
 def new_user_submit():  # acknowledges new user and sends confirmation email
 
@@ -65,7 +65,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 
 @app.route('/api/v1/new-kyc-submit/', methods=['PUT'])
 @auto.doc()
-# @cross_origin()
+@cross_origin()
 def new_kyc_submit():
     user_uid = request.form.get('uid')
     if not user_uid:
@@ -97,7 +97,7 @@ def new_kyc_submit():
 
 # PAGE ROUTING
 @app.route('/new-user-confirm/')
-# @cross_origin()
+@cross_origin()
 @auto.doc()
 def new_user_confirm():
     user_uid = request.args.get('uid')
@@ -139,7 +139,7 @@ def send_email_confirmation(email, uid):
     msg.html = "<b>Thank you for registering with MyFace Verification!</b> <br>" \
                "We're here for all your KYC/AML needs. <br><br>" \
                "Please click on the following link to confirm your email:<br>" \
-               ""+request.base_url+'new-user-confirm/?uid='+uid
+               "https://myface-server.herokuapp.com/new-user-confirm/?uid="+uid
     try:
         mail.send(msg)
         result = 'Email success'
@@ -188,9 +188,13 @@ def send_email_verify_fail(email, error_msg):
 
 def verify_faces(selfie_url, passport_url):  # Face API Handling
         selfie_faces = cf.face.detect(selfie_url)
+        if len(selfie_faces) == 0:
+            return [False, "Rejected: No faces found in selfie.", 0]
         selfie_face_id = selfie_faces[0][u'faceId']
 
         passport_faces = cf.face.detect(passport_url)
+        if len(passport_faces) == 0:
+            return [False, "Rejected: No faces found in passport.", 0]
         passport_face_id = passport_faces[0][u'faceId']
 
         result = cf.face.verify(selfie_face_id, passport_face_id)
