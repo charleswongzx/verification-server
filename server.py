@@ -59,7 +59,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 
     db.put('/users/'+user_uid, 'email_address', user_email)
     db.put('/users/'+user_uid, 'email_confirmed', False)
-    db.put('/users/'+user_uid, 'kyc_status', 'PENDING')
+    db.put('/users/'+user_uid, 'kyc_status', 'NULL')
 
     return jsonify(send_email_confirmation(user_email, user_uid))
 
