@@ -139,7 +139,7 @@ def send_email_confirmation(email, uid):
     msg.html = "<b>Thank you for registering with MyFace Verification!</b> <br>" \
                "We're here for all your KYC/AML needs. <br><br>" \
                "Please click on the following link to confirm your email:<br>" \
-               ""+request.base_url+'new-user-confirm/?uid='+uid
+               "https://myface-server.herokuapp.com/new-user-confirm/?uid="+uid
     try:
         mail.send(msg)
         result = 'Email success'
