@@ -188,9 +188,13 @@ def send_email_verify_fail(email, error_msg):
 
 def verify_faces(selfie_url, passport_url):  # Face API Handling
         selfie_faces = cf.face.detect(selfie_url)
+        if len(selfie_faces) == 0:
+            return [False, "Rejected: No faces found in selfie.", 0]
         selfie_face_id = selfie_faces[0][u'faceId']
 
         passport_faces = cf.face.detect(passport_url)
+        if len(passport_faces) == 0:
+            return [False, "Rejected: No faces found in passport.", 0]
         passport_face_id = passport_faces[0][u'faceId']
 
         result = cf.face.verify(selfie_face_id, passport_face_id)
