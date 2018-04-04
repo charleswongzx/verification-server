@@ -187,8 +187,8 @@ def send_email_verify_fail(email, error_msg):
 
 
 def verify_faces(selfie_url, passport_url):  # Face API Handling
-        selfie_faces = cf.face.detect(selfie_url)
         print(selfie_url)
+        selfie_faces = cf.face.detect(selfie_url)
         print('selfie faces:', selfie_faces)
         if len(selfie_faces) == 0:
             return [False, "Rejected: No faces found in selfie.", 0]
