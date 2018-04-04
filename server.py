@@ -187,30 +187,30 @@ def send_email_verify_fail(email, error_msg):
 
 
 def verify_faces(selfie_url, passport_url):  # Face API Handling
-        print(selfie_url)
-        selfie_faces = cf.face.detect(selfie_url)
-        print('selfie faces:', selfie_faces)
-        if len(selfie_faces) == 0:
-            return [False, "Rejected: No faces found in selfie.", 0]
-        selfie_face_id = selfie_faces[0][u'faceId']
+    print(selfie_url)
+    selfie_faces = cf.face.detect(selfie_url)
+    print('selfie faces:', selfie_faces)
+    if len(selfie_faces) == 0:
+        return [False, "Rejected: No faces found in selfie.", 0]
+    selfie_face_id = selfie_faces[0][u'faceId']
 
-        passport_faces = cf.face.detect(passport_url)
-        if len(passport_faces) == 0:
-            return [False, "Rejected: No faces found in passport.", 0]
-        passport_face_id = passport_faces[0][u'faceId']
+    passport_faces = cf.face.detect(passport_url)
+    if len(passport_faces) == 0:
+        return [False, "Rejected: No faces found in passport.", 0]
+    passport_face_id = passport_faces[0][u'faceId']
 
-        result = cf.face.verify(selfie_face_id, passport_face_id)
+    result = cf.face.verify(selfie_face_id, passport_face_id)
 
-        confidence = result["confidence"]
+    confidence = result["confidence"]
 
-        if result["isIdentical"]:
-            if confidence > 0.98:
-                return [False, "Rejected: Possible duplicate images. Ensure selfie image is front facing photo of user.", confidence]
-            else:
-                return [True, "Verified", confidence]
+    if result["isIdentical"]:
+        if confidence > 0.98:
+            return [False, "Rejected: Possible duplicate images. Ensure selfie image is front facing photo of user.", confidence]
+        else:
+            return [True, "Verified", confidence]
 
-        elif not result["isIdentical"]:
-            return [False, "Rejected: No facial match. Try a clearer picture or passport scan.", confidence]
+    elif not result["isIdentical"]:
+        return [False, "Rejected: No facial match. Try a clearer picture or passport scan.", confidence]
 
 
 if __name__ == '__main__':

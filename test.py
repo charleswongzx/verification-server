@@ -23,7 +23,7 @@ class FlaskTestCase(unittest.TestCase):
     # NEW USER CONFIRM TESTS
     def testNewUserConfirmSuccess(self):
         data = dict(
-            uid='12312412213'
+            uid='NEWUSER123'
         )
         rv = self.app.get('/new-user-confirm/', query_string=data)
         assert b'Email confirmation successful! Redirecting to MyFace to login...' in rv.data
@@ -43,7 +43,7 @@ class FlaskTestCase(unittest.TestCase):
     # NEW KYC SUBMIT TESTS
     def testNewKycSubmitSuccess(self):
         data = dict(
-            uid='12312412213',
+            uid='NEWUSER123',
             selfie_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/selfie%20with%20driving%20license?alt=media&token=74e7a621-7642-4c5b-9b5d-31dfb6f7775f',
             passport_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/0321%200900%20Charles%20Wong.jpg?alt=media&token=24dea5e5-2dc2-4d60-81f2-616b19d0da6e'
         )
@@ -52,7 +52,7 @@ class FlaskTestCase(unittest.TestCase):
 
     def testNewKycSubmitMismatch(self):
         data = dict(
-            uid='12312412213',
+            uid='NEWUSER123',
             selfie_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/selfie%20with%20driving%20license?alt=media&token=74e7a621-7642-4c5b-9b5d-31dfb6f7775f',
             passport_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/4CC09F46-DD71-477B-A1C9-197455BE2106%20-%20Joel%20Tan.jpeg?alt=media&token=127b241d-72e3-41cb-8ba5-3bd2e97a20ba'
         )
@@ -78,7 +78,7 @@ class FlaskTestCase(unittest.TestCase):
 
     def testNewKycSubmitNoSelfie(self):
         data = dict(
-            uid='12312412213',
+            uid='NEWUSER123',
             passport_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/4CC09F46-DD71-477B-A1C9-197455BE2106%20-%20Joel%20Tan.jpeg?alt=media&token=127b241d-72e3-41cb-8ba5-3bd2e97a20ba'
         )
         rv = self.app.put('/api/v1/new-kyc-submit/', data=data)
@@ -86,7 +86,7 @@ class FlaskTestCase(unittest.TestCase):
 
     def testNewKycSubmitNoPassport(self):
         data = dict(
-            uid='12312412213',
+            uid='NEWUSER123',
             selfie_url='https://firebasestorage.googleapis.com/v0/b/kyc-app-db.appspot.com/o/selfie%20with%20driving%20license?alt=media&token=74e7a621-7642-4c5b-9b5d-31dfb6f7775f',
         )
         rv = self.app.put('/api/v1/new-kyc-submit/', data=data)
