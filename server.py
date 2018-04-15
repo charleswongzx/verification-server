@@ -12,6 +12,7 @@ from firebase import firebase
 
 import cognitive_face as cf
 
+
 # Server Gubbins
 app = Flask(__name__)
 cors = CORS(app)
@@ -20,18 +21,14 @@ auth = HTTPBasicAuth()
 ionic_app_url = 'https://www.google.com'
 auto = autodoc.Autodoc(app)
 
-
 # Firebase Helper (http://ozgur.github.io/python-firebase/)
 db = firebase.FirebaseApplication('https://kyc-app-db.firebaseio.com/', None)
 
-
 # Azure Face API Details
-KEY = 'be8a2049b2e24dc3a42b041739af2ed0'
+KEY = 'b7ab1511b7564b489e60cf19d279f801'
 cf.Key.set(KEY)
 BASE_URL = 'https://westcentralus.api.cognitive.microsoft.com/face/v1.0'  # Replace with your regional Base URL
 cf.BaseUrl.set(BASE_URL)
-example_url = 'https://raw.githubusercontent.com/Microsoft/Cognitive-Face-Windows/master/Data/detection1.jpg'
-
 
 # Email Config
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -41,7 +38,6 @@ app.config['MAIL_PASSWORD'] = 'myface2018!'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
-
 
 # API ENDPOINTS
 @app.route('/api/v1/new-user-submit/', methods=['PUT'])
