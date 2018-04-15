@@ -100,6 +100,13 @@ def new_kyc_submit():
     if error_msg != None:
         send_email_verify_fail(user_email, error_msg)
         print(error_msg)
+        return error_msg
+
+    db.put('/users/'+user_uid, 'first_name', first_name)
+    db.put('/users/'+user_uid, 'last_name', last_name)
+    db.put('/users/'+user_uid, 'nric', nric)
+    db.put('/users/'+user_uid, 'phone', phone)
+    db.put('/users/'+user_uid, 'address', address)
 
     result = verify_faces(selfie_url, passport_url)
 
