@@ -73,11 +73,11 @@ def new_kyc_submit():
     nric = request.form.get('nric')
     phone = request.form.get('phone')
     address = request.form.get('address')
-    
+
     nric_valid = nric_validate(nric)
-    if not nric_valid
+    if not nric_valid:
         return 'NRIC not valid!'
-    
+
     user_uid = request.form.get('uid')
     if not user_uid:
         return 'No uid in args!'
@@ -186,8 +186,8 @@ def send_email_verify_fail(email, error_msg):
     msg.html = "<b>Thank you for verifying with MyFace KYC.</b><br>" \
                "Unfortunately, your application was not successful due to the following:<br><br>" \
                "<b><i>"+error_msg+"</i></b><br><br>" \
-               "Click here to login and try again:<br>" \
-               ""+ionic_app_url
+                                  "Click here to login and try again:<br>" \
+                                  ""+ionic_app_url
     try:
         mail.send(msg)
         result = 'Email success'
@@ -222,14 +222,14 @@ def verify_faces(selfie_url, passport_url):  # Face API Handling
 
     elif not result["isIdentical"]:
         return [False, "Rejected: No facial match. Try a clearer picture or passport scan.", confidence]
-    
-   
+
+
 def nric_validate(nric):
     if not nric or nric == '':
         return False
     if len(nric) != 9:
         return False
-        
+
     nric_numeric = list(nric)
     nric_numeric[0] = 0
     nric_numeric[1] = int(nric[1]) * 2
@@ -240,27 +240,26 @@ def nric_validate(nric):
     nric_numeric[6] = int(nric[6]) * 3
     nric_numeric[7] = int(nric[7]) * 2
     nric_numeric[8] = 0
-    
+
     weight = 0
     weight = sum(nric_numeric)
-    
+
     offset = 0
     if nric[0] == "T" or nric[0] == "G":
-      offset = 4
+        offset = 4
     else:
-      offset = 0
+        offset = 0
 
     temp = (offset + weight) % 11
 
     st = ["J","Z","I","H","G","F","E","D","C","B","A"]
     fg = ["X","W","U","T","R","Q","P","N","M","L","K"]
-    
 
     if nric[0] == "S" or nric[0] == "T":
-      alpha = st[temp]
+        alpha = st[temp]
     elif nric[0] == "F" or nric[0] == "G":
-      alpha = fg[temp]
-    
+        alpha = fg[temp]
+
 
 if __name__ == '__main__':
     # port = int(os.environ.get('PORT', 5000))
