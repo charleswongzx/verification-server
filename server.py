@@ -69,7 +69,7 @@ def new_user_submit():  # acknowledges new user and sends confirmation email
 @cross_origin()
 def new_kyc_submit():
     first_name = request.form.get('firstName')
-    last_name = request.form.get('lastMame')
+    last_name = request.form.get('lastName')
     nric = request.form.get('nric')
     phone = request.form.get('phone')
     address = request.form.get('address')
@@ -273,6 +273,11 @@ def nric_validate(nric):
         alpha = st[temp]
     elif nric[0] == "F" or nric[0] == "G":
         alpha = fg[temp]
+
+    if nric[8] == alpha:
+        return True
+    else:
+        return False
 
 
 if __name__ == '__main__':
