@@ -74,25 +74,32 @@ def new_kyc_submit():
     phone = request.form.get('phone')
     address = request.form.get('address')
 
+    print(first_name,last_name,nric,phone,address)
+
+    error_msg = None
     nric_valid = nric_validate(nric)
     if not nric_valid:
-        return 'NRIC not valid!'
+        error_msg = 'NRIC not valid!'
 
     user_uid = request.form.get('uid')
     if not user_uid:
-        return 'No uid in args!'
+        error_msg = 'No uid in args!'
 
     user_email = db.get('/users/'+user_uid, 'email_address')
     if not user_email:
-        return 'No such user!'
+        error_msg = 'No such user!'
 
     selfie_url = request.form.get('selfie_url')
     if not selfie_url:
-        return 'No selfie_url in args!'
+        error_msg = 'No selfie_url in args!'
 
     passport_url = request.form.get('passport_url')
     if not passport_url:
-        return 'No passport_url in args!'
+        error_msg = 'No passport_url in args!'
+
+    if error_msg != None:
+        send_email_verify_fail(user_email, error_msg)
+        print(error_msg)
 
     result = verify_faces(selfie_url, passport_url)
 
